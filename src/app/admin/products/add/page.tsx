@@ -29,6 +29,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useState } from 'react';
 import Image from 'next/image';
 import type { Product } from "@/lib/types";
+import { useFirestore, addDocumentNonBlocking } from "@/firebase";
+import { collection } from "firebase/firestore";
+import { useToast } from "@/hooks/use-toast";
 
 const productSchema = z.object({
   name: z.string().min(1, "Product name is required"),
@@ -46,7 +49,8 @@ const productSchema = z.object({
 export default function AddProductPage() {
   const router = useRouter();
   const [preview, setPreview] = useState<string | null>(null);
-  const [newProduct, setNewProduct] = useState<Product | null>(null);
+  const firestore = useFirestore();
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof productSchema>>({
     resolver: zodResolver(productSchema),
@@ -61,15 +65,51 @@ export default function AddProductPage() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof productSchema>) {
-    console.log("New product submitted:", values);
-    const product: Product = {
-      id: Date.now().toString(),
-      ...values,
-      imageIds: [],
-      uploadedImage: preview || undefined,
+  async function onSubmit(values: z.infer<typeof productSchema>) {
+    if (!firestore) {
+        toast({
+            variant: "destructive",
+            title: "Error",
+            description: "Firestore is not available. Please try again later.",
+        });
+        return;
+    }
+
+    const productsCollection = collection(firestore, "products");
+    
+    // For now, we are not handling image uploads to a storage bucket,
+    // so we'll use the preview (a data URL) or an empty string.
+    // The `imageUrl` will also be an empty string since we removed imageIds.
+    // In a real app, you'd upload the file and get a URL.
+    const newProductData = {
+        name: values.name,
+        description: values.description,
+        price: values.price,
+        category: values.category,
+        brand: values.brand,
+        stock: values.stock,
+        isFeatured: values.isFeatured,
+        newArrival: values.newArrival,
+        rating: values.rating,
+        imageUrl: preview || '', // Using data URL as imageUrl for now.
+        imageIds: [], // This was from the mock data, keeping it for type consistency
     };
-    setNewProduct(product);
+
+    try {
+        await addDocumentNonBlocking(productsCollection, newProductData);
+        toast({
+            title: "Product Added!",
+            description: `${values.name} has been added to the catalog.`,
+        });
+        router.push('/admin/products');
+    } catch (error) {
+        console.error("Error adding product: ", error);
+        toast({
+            variant: "destructive",
+            title: "Uh oh! Something went wrong.",
+            description: "Could not add the product.",
+        });
+    }
   }
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,32 +123,6 @@ export default function AddProductPage() {
       reader.readAsDataURL(file);
     }
   };
-
-  if (newProduct) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle className="font-headline">Product Added!</CardTitle>
-          <CardDescription>Here is a preview of your new product.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-            <div><strong>Name:</strong> {newProduct.name}</div>
-            <div><strong>Price:</strong> Ksh.{newProduct.price}</div>
-            <div><strong>Description:</strong> {newProduct.description}</div>
-            {newProduct.uploadedImage && (
-                <div>
-                    <strong>Image:</strong>
-                    <div className="mt-2 relative w-48 h-48">
-                        <Image src={newProduct.uploadedImage} alt={newProduct.name} layout="fill" objectFit="cover" className="rounded-md" />
-                    </div>
-                </div>
-            )}
-            <Button onClick={() => router.push('/admin/products')}>Back to Products</Button>
-        </CardContent>
-      </Card>
-    );
-  }
-
 
   return (
     <Card>
@@ -309,3 +323,5 @@ export default function AddProductPage() {
     </Card>
   );
 }
+
+    
