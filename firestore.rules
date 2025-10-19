@@ -1,111 +1,116 @@
+/**
+ * Core Philosophy: This ruleset enforces a user-ownership model for user-specific data (orders, customer profiles)
+ * and allows public read access to product and category information. Administrative privileges are not defined.
+ *
+ * Data Structure:
+ * - /products/{productId}: Public product catalog.
+ * - /categories/{categoryId}: Public list of product categories.
+ * - /users/{userId}/orders/{orderId}: Orders belonging to a specific user.
+ * - /users/{userId}: Customer profile for a specific user.
+ * - /promoCodes/{promoCodeId}: Public list of available promo codes.
+ *
+ * Key Security Decisions:
+ * - Users can only manage their own orders and profiles.
+ * - Product and category information is publicly readable, but write access is not granted.
+ * - Listing of users is not permitted, due to privacy concerns.
+ *
+ * Denormalization for Authorization:
+ * - User-specific data is stored under /users/{userId} to simplify authorization checks.
+ *
+ * Structural Segregation:
+ * - Private user data (orders) and public data (products, categories) are in separate collections to improve list operation security.
+ */
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+
     /**
-     * @description This ruleset allows public read access to products, but restricts write access.
+     * @description Allows anyone to read product information, but restricts modifications.
      * @path /products/{productId}
-     * @allow (get, list): Allows any user to read product information.
-     * @allow (create, update, delete): // TODO: Add owner validation once the schema is updated with an ownership field.
-     * @deny (create): if false; // Placeholder: Replace with owner-based validation after schema update.
-     * @deny (update): if false; // Placeholder: Replace with owner-based validation after schema update.
-     * @deny (delete): if false; // Placeholder: Replace with owner-based validation after schema update.
-     * @principle Allows public read access while reserving write access for authorized users (e.g., admins or product owners) after the schema is updated with an ownership field.
+     * @allow (get, list): Allows any user (or no user) to read any product.
+     * @allow (create, update, delete): No write access is granted.
+     * @deny (create, update, delete): All write requests are denied for everyone.
+     * @principle Public read, no writes.
      */
     match /products/{productId} {
       allow get, list: if true;
-      // CRITICAL: Cannot implement owner-only writes. The 'Product' entity is missing an 'ownerId' or 'authorId' field.
-      allow create, update, delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
     }
 
     /**
-     * @description This ruleset allows public read access to categories, but restricts write access.
+     * @description Allows anyone to read product categories, but restricts modifications.
      * @path /categories/{categoryId}
-     * @allow (get, list): Allows any user to read category information.
-     * @allow (create, update, delete): // TODO: Add owner validation once the schema is updated with an ownership field.
-     * @deny (create): if false; // Placeholder: Replace with owner-based validation after schema update.
-     * @deny (update): if false; // Placeholder: Replace with owner-based validation after schema update.
-     * @deny (delete): if false; // Placeholder: Replace with owner-based validation after schema update.
-     * @principle Allows public read access while reserving write access for authorized users (e.g., admins or category managers) after the schema is updated with an ownership field.
+     * @allow (get, list): Allows any user (or no user) to read any category.
+     * @allow (create, update, delete): No write access is granted.
+     * @deny (create, update, delete): All write requests are denied for everyone.
+     * @principle Public read, no writes.
      */
     match /categories/{categoryId} {
       allow get, list: if true;
-      // CRITICAL: Cannot implement owner-only writes. The 'Category' entity is missing an 'ownerId' or 'authorId' field.
-      allow create, update, delete: if false; // TODO: Add owner validation once the schema is updated with an ownership field.
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
     }
 
     /**
-     * @description This ruleset enforces a user-ownership model for orders, ensuring only the authenticated user can access their own order data.
+     * @description Secures order data to the owning user.
      * @path /users/{userId}/orders/{orderId}
-     * @allow (get, list): Allows the owner to read their own order data.
-     * @allow (create): Allows the owner to create order data with validated customerId.
-     * @allow (update): Allows the existing owner to update their own order data.
-     * @allow (delete): Allows the existing owner to delete their own order data.
-     * @deny: For all other cases, the rule denies access.
-     * @principle Enforces path-based ownership, preventing unauthorized access to order information. Validates relational integrity by ensuring the 'customerId' matches the 'userId' in the path.
+     * @allow (create, get, list, update, delete): Allows the user with ID {userId} to manage their own orders.
+     * @deny (create, get, list, update, delete): Denies access to any other user.
+     * @principle Enforces path-based ownership for user-specific order data.
      */
     match /users/{userId}/orders/{orderId} {
-      allow get, list: if isSignedIn() && isOwner(userId);
-      allow create: if isSignedIn() && isOwner(userId) && request.resource.data.customerId == request.auth.uid;
-      allow update: if isSignedIn() && isExistingOwner(userId);
-      allow delete: if isSignedIn() && isExistingOwner(userId);
+      allow read, write: if isSignedIn() && isOwner(userId);
     }
 
     /**
-     * @description This ruleset enforces a user-ownership model for order items, ensuring only the authenticated user can access their own order items.
+     * @description Secures order item data to the owning user.
      * @path /users/{userId}/orders/{orderId}/orderItems/{orderItemId}
-     * @allow (get, list): Allows the owner to read their own order item data.
-     * @allow (create): Allows the owner to create order item data.
-     * @allow (update): Allows the existing owner to update their own order item data.
-     * @allow (delete): Allows the existing owner to delete their own order item data.
-     * @deny: For all other cases, the rule denies access.
-     * @principle Enforces path-based ownership, preventing unauthorized access to order item information.
+     * @allow (create, get, list, update, delete): Allows the user with ID {userId} to manage their own order items.
+     * @deny (create, get, list, update, delete): Denies access to any other user.
+     * @principle Enforces path-based ownership for user-specific order item data.
      */
     match /users/{userId}/orders/{orderId}/orderItems/{orderItemId} {
-      allow get, list: if isSignedIn() && isOwner(userId);
-      allow create: if isSignedIn() && isOwner(userId);
-      allow update: if isSignedIn() && isExistingOwner(userId);
-      allow delete: if isSignedIn() && isExistingOwner(userId);
+      allow read, write: if isSignedIn() && isOwner(userId);
     }
 
     /**
-     * @description This ruleset enforces a user-ownership model for customer profiles, ensuring only the authenticated user can access their own profile data.
+     * @description Restricts access to user documents to the owning user.
      * @path /users/{userId}
-     * @allow (get): Allows the owner to get their own profile data.
-     * @allow (create): Allows a user to create their own profile if the userId matches the authenticated user's UID.
-     * @allow (update): Allows the existing owner to update their own profile data.
-     * @allow (delete): Allows the existing owner to delete their own profile data.
-     * @principle Enforces path-based ownership, preventing unauthorized access to customer information.
+     * @allow create: if isSignedIn() && request.auth.uid == userId; // Self-creation rule
+     * @allow get, list, update, delete: if isSignedIn() && request.auth.uid == userId;
+     * @deny list: if false;
+     * @principle Restricts access to a user's own data tree.
      */
     match /users/{userId} {
-      allow get: if isSignedIn() && isOwner(userId);
-      allow create: if isSignedIn() && isOwner(userId) && request.resource.data.id == request.auth.uid;
-      allow update: if isSignedIn() && isExistingOwner(userId) && request.resource.data.id == resource.data.id;
-      allow delete: if isSignedIn() && isExistingOwner(userId);
+        allow create: if isSignedIn() && request.auth.uid == userId;
+        allow get, update, delete: if isSignedIn() && request.auth.uid == userId;
+        allow list: if false;
     }
 
     /**
-     * @description This ruleset restricts access to promo codes.
+     * @description Allows anyone to read promotional codes, but restricts modifications.
      * @path /promoCodes/{promoCodeId}
-     * @allow (get, list): Allows any user to read promo code information.
-     * @deny (create, update, delete): if false;
-     * @principle Allows public read access while completely restricting write access for now.
+     * @allow (get, list): Allows any user (or no user) to read any promo code.
+     * @allow (create, update, delete): No write access is granted.
+     * @deny (create, update, delete): All write requests are denied for everyone.
+     * @principle Public read, no writes.
      */
     match /promoCodes/{promoCodeId} {
       allow get, list: if true;
-      allow create, update, delete: if false;
+      allow create: if false;
+      allow update: if false;
+      allow delete: if false;
     }
   }
 
-  // Helper functions
-  function isSignedIn() {
-    return request.auth != null;
-  }
+    function isSignedIn() {
+        return request.auth != null;
+    }
 
-  function isOwner(userId) {
-    return request.auth.uid == userId;
-  }
-
-  function isExistingOwner(userId) {
-    return isSignedIn() && isOwner(userId) && resource != null;
-  }
+    function isOwner(userId) {
+        return request.auth.uid == userId;
+    }
 }
