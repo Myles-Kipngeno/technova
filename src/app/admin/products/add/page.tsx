@@ -37,7 +37,6 @@ const productSchema = z.object({
   category: z.enum(['Smartphones', 'Laptops', 'Audio', 'Wearables', 'Cameras', 'Drones']),
   brand: z.enum(['Nova', 'Electro', 'Sonic', 'Connect']),
   stock: z.coerce.number().int().min(0, "Stock must be a non-negative integer"),
-  imageIds: z.string().min(1, "At least one image ID is required"),
   uploadedImage: z.any().optional(),
   isFeatured: z.boolean().default(false),
   newArrival: z.boolean().default(false),
@@ -56,7 +55,6 @@ export default function AddProductPage() {
       description: "",
       price: 0,
       stock: 0,
-      imageIds: "",
       isFeatured: false,
       newArrival: false,
       rating: 4,
@@ -68,7 +66,7 @@ export default function AddProductPage() {
     const product: Product = {
       id: Date.now().toString(),
       ...values,
-      imageIds: values.imageIds.split(',').map(s => s.trim()),
+      imageIds: [],
       uploadedImage: preview || undefined,
     };
     setNewProduct(product);
@@ -253,23 +251,6 @@ export default function AddProductPage() {
                 )}
               />
             </div>
-            
-            <FormField
-              control={form.control}
-              name="imageIds"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Placeholder Image IDs</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g. product-new-1, product-new-2" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    Comma-separated list of image IDs from placeholder-images.json. Used if no image is uploaded.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
             <div className="flex items-center space-x-6">
                 <FormField
@@ -328,5 +309,3 @@ export default function AddProductPage() {
     </Card>
   );
 }
-
-    
