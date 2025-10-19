@@ -5,6 +5,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { CartProvider } from '@/context/cart-context';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
+import { FirebaseClientProvider } from '@/firebase';
 
 export const metadata: Metadata = {
   title: 'TechNova Electronics Online',
@@ -24,12 +25,14 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
       </head>
       <body className={cn('min-h-screen bg-background font-body antialiased flex flex-col')}>
-        <CartProvider>
-          <Header />
-          <main className="flex-grow">{children}</main>
-          <Footer />
-          <Toaster />
-        </CartProvider>
+        <FirebaseClientProvider>
+          <CartProvider>
+            <Header />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+            <Toaster />
+          </CartProvider>
+        </FirebaseClientProvider>
       </body>
     </html>
   );

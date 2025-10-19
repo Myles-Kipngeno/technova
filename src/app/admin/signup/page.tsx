@@ -18,16 +18,15 @@ import {
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { HardDrive } from "lucide-react";
 import { useAuth } from "@/firebase";
-import { initiateEmailSignIn } from "@/firebase/non-blocking-login";
+import { initiateEmailSignUp } from "@/firebase/non-blocking-login";
 import { useToast } from "@/hooks/use-toast";
-
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
-  password: z.string().min(1, "Password is required"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
-export default function AdminLoginPage() {
+export default function AdminSignupPage() {
   const router = useRouter();
   const auth = useAuth();
   const { toast } = useToast();
@@ -39,16 +38,16 @@ export default function AdminLoginPage() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      initiateEmailSignIn(auth, values.email, values.password);
+      initiateEmailSignUp(auth, values.email, values.password);
       toast({
-        title: "Login Successful",
+        title: "Signup Successful",
         description: "Redirecting to dashboard...",
       });
       router.push("/admin");
     } catch (error: any) {
-       toast({
+      toast({
         variant: "destructive",
-        title: "Login Failed",
+        title: "Signup Failed",
         description: error.message || "An unexpected error occurred.",
       });
     }
@@ -62,8 +61,8 @@ export default function AdminLoginPage() {
                 <HardDrive className="h-10 w-10 text-primary" />
                 <span className="text-3xl font-bold font-headline">TechNova</span>
             </div>
-          <CardTitle className="font-headline text-2xl">Admin Login</CardTitle>
-          <CardDescription>Enter your credentials to access the dashboard.</CardDescription>
+          <CardTitle className="font-headline text-2xl">Admin Sign Up</CardTitle>
+          <CardDescription>Create an account to access the dashboard.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -82,13 +81,13 @@ export default function AdminLoginPage() {
                   <FormMessage />
                 </FormItem>
               )} />
-              <Button type="submit" className="w-full">Sign In</Button>
+              <Button type="submit" className="w-full">Sign Up</Button>
             </form>
           </Form>
            <p className="mt-4 text-center text-sm">
-              Don't have an account?{' '}
-              <Link href="/admin/signup" className="underline">
-                Sign up
+              Already have an account?{' '}
+              <Link href="/admin/login" className="underline">
+                Sign in
               </Link>
             </p>
         </CardContent>

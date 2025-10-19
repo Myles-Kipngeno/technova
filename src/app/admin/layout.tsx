@@ -6,7 +6,8 @@ import {
   Package,
   ShoppingCart,
   Users,
-  HardDrive
+  HardDrive,
+  LogOut
 } from "lucide-react";
 import {
   Sidebar,
@@ -21,7 +22,11 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useAuth, useUser } from "@/firebase";
+import { useEffect } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
 
 const adminNavItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -36,11 +41,41 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const router = useRouter();
+  const { user, isUserLoading } = useUser();
+  const auth = useAuth();
+
+
+  useEffect(() => {
+    if (!isUserLoading && !user && pathname !== '/admin/login' && pathname !== '/admin/signup') {
+      router.push('/admin/login');
+    }
+  }, [user, isUserLoading, pathname, router]);
+
+  if (isUserLoading && pathname !== '/admin/login' && pathname !== '/admin/signup') {
+    return <div>Loading...</div>; // Or a proper loading skeleton
+  }
+  
+  if (!user && pathname !== '/admin/login' && pathname !== '/admin/signup') {
+    return null; // Don't render layout for non-authed users outside of login/signup
+  }
+
+  // Hide sidebar and header for login/signup pages
+  if (pathname === '/admin/login' || pathname === '/admin/signup') {
+    return <>{children}</>;
+  }
+
+
   const getPageTitle = () => {
     if (pathname.startsWith('/admin/products/add')) return 'Add Product';
     const currentItem = adminNavItems.find(item => pathname === item.href || pathname.startsWith(item.href + '/'));
     return currentItem ? currentItem.label : 'Dashboard';
   }
+  
+  const handleSignOut = async () => {
+    await auth.signOut();
+    router.push('/admin/login');
+  };
 
   return (
     <SidebarProvider>
@@ -72,7 +107,20 @@ export default function AdminLayout({
             ))}
           </SidebarMenu>
         </SidebarContent>
-        <SidebarFooter>
+        <SidebarFooter className="flex flex-col gap-2">
+            <div className="flex items-center gap-2 p-2 rounded-md bg-secondary">
+              <Avatar className="h-8 w-8">
+                  <AvatarImage src={user?.photoURL || ''} alt="user avatar" />
+                  <AvatarFallback>{user?.email?.[0].toUpperCase()}</AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col truncate">
+                <span className="text-sm font-semibold truncate">{user?.displayName || user?.email}</span>
+                <span className="text-xs text-muted-foreground">Administrator</span>
+              </div>
+               <Button variant="ghost" size="icon" onClick={handleSignOut} className="ml-auto">
+                  <LogOut className="h-5 w-5"/>
+               </Button>
+            </div>
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton asChild>
