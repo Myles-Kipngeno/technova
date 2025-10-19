@@ -1,3 +1,5 @@
+
+"use client";
 import Link from "next/link";
 import {
   LayoutDashboard,
@@ -19,6 +21,7 @@ import {
   SidebarFooter,
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
+import { usePathname } from "next/navigation";
 
 const adminNavItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -32,6 +35,13 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  const getPageTitle = () => {
+    if (pathname.startsWith('/admin/products/add')) return 'Add Product';
+    const currentItem = adminNavItems.find(item => pathname === item.href || pathname.startsWith(item.href + '/'));
+    return currentItem ? currentItem.label : 'Dashboard';
+  }
+
   return (
     <SidebarProvider>
       <Sidebar>
@@ -52,7 +62,7 @@ export default function AdminLayout({
           <SidebarMenu>
             {adminNavItems.map((item) => (
               <SidebarMenuItem key={item.href}>
-                <SidebarMenuButton asChild>
+                <SidebarMenuButton asChild isActive={pathname === item.href || (item.href !== '/admin' && pathname.startsWith(item.href))}>
                   <Link href={item.href}>
                     <item.icon className="h-5 w-5" />
                     <span>{item.label}</span>
@@ -77,7 +87,7 @@ export default function AdminLayout({
       <SidebarInset>
         <header className="p-4 border-b flex items-center gap-4">
             <SidebarTrigger />
-            <h1 className="text-xl font-semibold font-headline">Dashboard</h1>
+            <h1 className="text-xl font-semibold font-headline">{getPageTitle()}</h1>
         </header>
         <div className="p-4 md:p-6 bg-background">
             {children}

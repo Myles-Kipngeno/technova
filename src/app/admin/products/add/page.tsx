@@ -1,0 +1,267 @@
+
+"use client";
+
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+
+const productSchema = z.object({
+  name: z.string().min(1, "Product name is required"),
+  description: z.string().min(1, "Description is required"),
+  price: z.coerce.number().min(0, "Price must be a positive number"),
+  category: z.enum(['Smartphones', 'Laptops', 'Audio', 'Wearables', 'Cameras', 'Drones']),
+  brand: z.enum(['Nova', 'Electro', 'Sonic', 'Connect']),
+  stock: z.coerce.number().int().min(0, "Stock must be a non-negative integer"),
+  imageIds: z.string().min(1, "At least one image ID is required"),
+  isFeatured: z.boolean().default(false),
+  newArrival: z.boolean().default(false),
+  rating: z.coerce.number().int().min(1).max(5),
+});
+
+export default function AddProductPage() {
+  const router = useRouter();
+  const form = useForm<z.infer<typeof productSchema>>({
+    resolver: zodResolver(productSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+      price: 0,
+      stock: 0,
+      imageIds: "",
+      isFeatured: false,
+      newArrival: false,
+      rating: 4,
+    },
+  });
+
+  function onSubmit(values: z.infer<typeof productSchema>) {
+    console.log("New product submitted:", values);
+    // Here you would typically add the product to your database
+    // For now, we'll just log it and redirect
+    router.push("/admin/products");
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="font-headline">Add New Product</CardTitle>
+        <CardDescription>Fill out the form below to add a new product to the catalog.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Product Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g. NovaPhone X2" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="price"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Price (Ksh.)</FormLabel>
+                    <FormControl>
+                      <Input type="number" placeholder="e.g. 1299" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Describe the product..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Category</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a category" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Smartphones">Smartphones</SelectItem>
+                        <SelectItem value="Laptops">Laptops</SelectItem>
+                        <SelectItem value="Audio">Audio</SelectItem>
+                        <SelectItem value="Wearables">Wearables</SelectItem>
+                        <SelectItem value="Cameras">Cameras</SelectItem>
+                        <SelectItem value="Drones">Drones</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="brand"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Brand</FormLabel>
+                     <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a brand" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Nova">Nova</SelectItem>
+                        <SelectItem value="Electro">Electro</SelectItem>
+                        <SelectItem value="Sonic">Sonic</SelectItem>
+                        <SelectItem value="Connect">Connect</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="stock"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Stock Quantity</FormLabel>
+                    <FormControl>
+                      <Input type="number" placeholder="e.g. 100" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+               <FormField
+                control={form.control}
+                name="rating"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Rating (1-5)</FormLabel>
+                    <FormControl>
+                      <Input type="number" min="1" max="5" placeholder="e.g. 5" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            
+            <FormField
+              control={form.control}
+              name="imageIds"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Image IDs</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g. product-new-1, product-new-2" {...field} />
+                  </FormControl>
+                  <FormDescription>
+                    Comma-separated list of image IDs from placeholder-images.json.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="flex items-center space-x-6">
+                <FormField
+                    control={form.control}
+                    name="isFeatured"
+                    render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                        <FormControl>
+                            <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                            <FormLabel>
+                            Featured Product
+                            </FormLabel>
+                            <FormDescription>
+                            Display this product on the homepage.
+                            </FormDescription>
+                        </div>
+                        </FormItem>
+                    )}
+                />
+                 <FormField
+                    control={form.control}
+                    name="newArrival"
+                    render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                        <FormControl>
+                            <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                            />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                            <FormLabel>
+                            New Arrival
+                            </FormLabel>
+                             <FormDescription>
+                            Mark this product as a new arrival.
+                            </FormDescription>
+                        </div>
+                        </FormItem>
+                    )}
+                />
+            </div>
+            
+            <div className="flex justify-end gap-4">
+                <Button type="button" variant="outline" onClick={() => router.back()}>Cancel</Button>
+                <Button type="submit">Add Product</Button>
+            </div>
+          </form>
+        </Form>
+      </CardContent>
+    </Card>
+  );
+}

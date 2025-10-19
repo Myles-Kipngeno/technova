@@ -1,3 +1,4 @@
+
 import { products } from "@/lib/products";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,6 +19,7 @@ import {
 } from "@/components/ui/card";
 import { PlusCircle, MoreHorizontal } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import Link from "next/link";
 
 export default function AdminProductsPage() {
   return (
@@ -27,9 +29,11 @@ export default function AdminProductsPage() {
           <CardTitle className="font-headline">Products</CardTitle>
           <CardDescription>Manage your products here.</CardDescription>
         </div>
-        <Button size="sm" className="gap-1">
-          <PlusCircle className="h-4 w-4" />
-          Add Product
+        <Button size="sm" className="gap-1" asChild>
+          <Link href="/admin/products/add">
+            <PlusCircle className="h-4 w-4" />
+            Add Product
+          </Link>
         </Button>
       </CardHeader>
       <CardContent>
