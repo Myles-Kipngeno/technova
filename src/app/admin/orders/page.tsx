@@ -20,9 +20,9 @@ import { Button } from "@/components/ui/button";
 import type { Order } from "@/lib/types";
 
 const mockOrders: Order[] = [
-    { id: "ORD001", customer: { name: "John Doe", email: "john@example.com", phone: "", address: "" }, items: [], total: 250.00, paymentStatus: 'Paid', deliveryStatus: "Shipped", createdAt: new Date('2023-10-26') },
-    { id: "ORD002", customer: { name: "Jane Smith", email: "jane@example.com", phone: "", address: "" }, items: [], total: 150.75, paymentStatus: 'Paid', deliveryStatus: "Delivered", createdAt: new Date('2023-10-25') },
-    { id: "ORD003", customer: { name: "Bob Johnson", email: "bob@example.com", phone: "", address: "" }, items: [], total: 350.00, paymentStatus: 'Unpaid', deliveryStatus: "Processing", createdAt: new Date('2023-10-27') },
+    { id: "ORD001", customer: { name: "John Doe", email: "john@example.com", phone: "", address: "" }, items: [], total: 250.00, paymentStatus: 'Paid', deliveryStatus: "Shipped", createdAt: new Date('2023-10-26'), paymentMethod: "card" },
+    { id: "ORD002", customer: { name: "Jane Smith", email: "jane@example.com", phone: "", address: "" }, items: [], total: 150.75, paymentStatus: 'Paid', deliveryStatus: "Delivered", createdAt: new Date('2023-10-25'), paymentMethod: "card" },
+    { id: "ORD003", customer: { name: "Bob Johnson", email: "bob@example.com", phone: "", address: "" }, items: [], total: 350.00, paymentStatus: 'Unpaid', deliveryStatus: "Processing", createdAt: new Date('2023-10-27'), paymentMethod: "card" },
 ];
 
 
@@ -65,7 +65,7 @@ export default function AdminOrdersPage() {
                 <TableCell className="font-medium">{order.id}</TableCell>
                 <TableCell>{order.customer.name}</TableCell>
                 <TableCell>{order.createdAt.toLocaleDateString()}</TableCell>
-                <TableCell>${order.total.toFixed(2)}</TableCell>
+                <TableCell>Ksh.{order.total.toFixed(2)}</TableCell>
                 <TableCell>
                   <Badge variant={order.paymentStatus === 'Paid' ? 'default' : 'destructive'} className={order.paymentStatus === 'Paid' ? 'bg-green-500' : ''}>
                     {order.paymentStatus}

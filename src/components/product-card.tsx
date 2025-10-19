@@ -49,7 +49,7 @@ export function ProductCard({ product }: ProductCardProps) {
         </CardTitle>
       </CardContent>
       <CardFooter className="flex justify-between items-center p-4 pt-0">
-        <p className="text-xl font-bold font-headline text-foreground">${product.price.toFixed(2)}</p>
+        <p className="text-xl font-bold font-headline text-foreground">Ksh.{product.price.toFixed(2)}</p>
         <Button size="icon" variant="outline" onClick={() => addToCart(product)} aria-label={`Add ${product.name} to cart`}>
           <ShoppingCart className="h-5 w-5" />
         </Button>

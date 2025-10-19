@@ -49,7 +49,7 @@ export default function AdminProductsPage() {
               <TableRow key={product.id}>
                 <TableCell className="font-medium">{product.name}</TableCell>
                 <TableCell>{product.category}</TableCell>
-                <TableCell>${product.price.toFixed(2)}</TableCell>
+                <TableCell>Ksh.{product.price.toFixed(2)}</TableCell>
                 <TableCell>{product.stock}</TableCell>
                 <TableCell>
                   <Badge variant={product.stock > 0 ? "default" : "destructive"} className={product.stock > 0 ? "bg-green-500" : ""}>

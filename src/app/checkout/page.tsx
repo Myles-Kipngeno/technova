@@ -7,6 +7,7 @@ import * as z from "zod";
 import { useCart } from "@/context/cart-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Form,
@@ -136,13 +137,13 @@ export default function CheckoutPage() {
                 {cartItems.map(item => (
                   <div key={item.product.id} className="flex justify-between items-center text-sm">
                     <span className="truncate pr-2">{item.product.name} x {item.quantity}</span>
-                    <span className="font-medium">${(item.product.price * item.quantity).toFixed(2)}</span>
+                    <span className="font-medium">Ksh.{(item.product.price * item.quantity).toFixed(2)}</span>
                   </div>
                 ))}
                 <Separator />
                 <div className="flex justify-between text-lg font-bold">
                   <span>Total</span>
-                  <span>${cartTotal.toFixed(2)}</span>
+                  <span>Ksh.{cartTotal.toFixed(2)}</span>
                 </div>
               </CardContent>
               <CardFooter>

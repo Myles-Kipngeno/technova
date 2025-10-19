@@ -45,7 +45,7 @@ export default function AdminCustomersPage() {
                 <TableCell>{customer.name}</TableCell>
                 <TableCell>{customer.email}</TableCell>
                 <TableCell>{customer.totalOrders}</TableCell>
-                <TableCell>${customer.totalSpent.toFixed(2)}</TableCell>
+                <TableCell>Ksh.{customer.totalSpent.toFixed(2)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -91,8 +91,8 @@ export default function ShopPage() {
                 className="mt-4"
               />
               <div className="flex justify-between text-sm text-muted-foreground mt-2">
-                <span>${priceRange[0]}</span>
-                <span>${priceRange[1]}</span>
+                <span>Ksh.{priceRange[0]}</span>
+                <span>Ksh.{priceRange[1]}</span>
               </div>
             </div>
 

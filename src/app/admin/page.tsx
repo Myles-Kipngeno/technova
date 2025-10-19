@@ -48,7 +48,7 @@ export default function AdminDashboardPage() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$45,231.89</div>
+            <div className="text-2xl font-bold">Ksh.45,231.89</div>
             <p className="text-xs text-muted-foreground">+20.1% from last month</p>
           </CardContent>
         </Card>
@@ -104,7 +104,7 @@ export default function AdminDashboardPage() {
                   fontSize={12}
                   tickLine={false}
                   axisLine={false}
-                  tickFormatter={(value) => `$${value}`}
+                  tickFormatter={(value) => `Ksh.${value}`}
                 />
                  <Tooltip cursor={{ fill: 'hsl(var(--secondary))' }} content={<ChartTooltipContent />} />
                 <Bar dataKey="total" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />

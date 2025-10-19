@@ -29,7 +29,7 @@ function ConfirmationContent() {
           </div>
           <div className="border rounded-lg p-4 bg-secondary">
             <p className="text-sm text-muted-foreground">Total Amount</p>
-            <p className="text-lg font-mono font-bold">${parseFloat(total).toFixed(2)}</p>
+            <p className="text-lg font-mono font-bold">Ksh.{parseFloat(total).toFixed(2)}</p>
           </div>
           <p className="text-sm text-muted-foreground">
             Estimated delivery: 3-5 business days.

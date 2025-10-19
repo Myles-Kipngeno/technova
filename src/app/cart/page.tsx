@@ -50,7 +50,7 @@ export default function CartPage() {
                   <Link href={`/shop/${item.product.id}`}>
                     <h2 className="font-semibold font-headline hover:text-primary">{item.product.name}</h2>
                   </Link>
-                  <p className="text-sm text-muted-foreground">${item.product.price.toFixed(2)}</p>
+                  <p className="text-sm text-muted-foreground">Ksh.{item.product.price.toFixed(2)}</p>
                 </div>
                 <div className="flex items-center gap-4">
                   <div className="flex items-center border rounded-md">
@@ -62,7 +62,7 @@ export default function CartPage() {
                       <Plus className="h-4 w-4" />
                     </Button>
                   </div>
-                  <p className="font-semibold w-20 text-right">${(item.product.price * item.quantity).toFixed(2)}</p>
+                  <p className="font-semibold w-20 text-right">Ksh.{(item.product.price * item.quantity).toFixed(2)}</p>
                   <Button variant="ghost" size="icon" onClick={() => removeFromCart(item.product.id)} className="text-muted-foreground hover:text-destructive">
                     <Trash2 className="h-5 w-5" />
                   </Button>
@@ -82,7 +82,7 @@ export default function CartPage() {
             <CardContent className="space-y-4">
               <div className="flex justify-between">
                 <span>Subtotal</span>
-                <span>${cartTotal.toFixed(2)}</span>
+                <span>Ksh.{cartTotal.toFixed(2)}</span>
               </div>
               <div className="flex justify-between">
                 <span>Shipping</span>
@@ -91,7 +91,7 @@ export default function CartPage() {
               <Separator />
               <div className="flex justify-between font-bold text-lg">
                 <span>Total</span>
-                <span>${cartTotal.toFixed(2)}</span>
+                <span>Ksh.{cartTotal.toFixed(2)}</span>
               </div>
             </CardContent>
             <CardFooter>

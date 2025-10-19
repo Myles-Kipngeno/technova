@@ -96,7 +96,7 @@ export default function ProductPage({ params }: ProductPageProps) {
           <Separator className="my-6" />
           
           <div className="flex items-baseline gap-4">
-            <span className="text-4xl font-bold font-headline text-primary">${product.price.toFixed(2)}</span>
+            <span className="text-4xl font-bold font-headline text-primary">Ksh.{product.price.toFixed(2)}</span>
             <span className={product.stock > 0 ? "text-green-600" : "text-red-600"}>
               {product.stock > 0 ? `${product.stock} in stock` : "Out of stock"}
             </span>
