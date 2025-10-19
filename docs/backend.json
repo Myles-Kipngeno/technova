@@ -1,0 +1,337 @@
+{
+  "entities": {
+    "Product": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Product",
+      "type": "object",
+      "description": "Represents a product sold on TechNova Electronics Online.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Product entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the product."
+        },
+        "price": {
+          "type": "number",
+          "description": "The price of the product."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the product."
+        },
+        "categoryId": {
+          "type": "string",
+          "description": "Reference to Category. (Relationship: Category 1:N Product)"
+        },
+        "stock": {
+          "type": "number",
+          "description": "The number of units currently in stock."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the product image.",
+          "format": "uri"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "price",
+        "description",
+        "categoryId",
+        "stock",
+        "imageUrl"
+      ]
+    },
+    "Category": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Category",
+      "type": "object",
+      "description": "Represents a category of products.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Category entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the category."
+        },
+        "description": {
+          "type": "string",
+          "description": "A description of the category."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description"
+      ]
+    },
+    "Order": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Order",
+      "type": "object",
+      "description": "Represents a customer order.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Order entity."
+        },
+        "customerId": {
+          "type": "string",
+          "description": "Reference to Customer. (Relationship: Customer 1:N Order)"
+        },
+        "orderDate": {
+          "type": "string",
+          "description": "The date the order was placed.",
+          "format": "date-time"
+        },
+        "totalAmount": {
+          "type": "number",
+          "description": "The total amount of the order."
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of the order (e.g., Processing, Shipped, Delivered)."
+        },
+        "paymentMethod": {
+          "type": "string",
+          "description": "The method of payment used for the order (e.g., M-Pesa, Card, PayPal)."
+        }
+      },
+      "required": [
+        "id",
+        "customerId",
+        "orderDate",
+        "totalAmount",
+        "status",
+        "paymentMethod"
+      ]
+    },
+    "OrderItem": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "OrderItem",
+      "type": "object",
+      "description": "Represents an item within an order.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the OrderItem entity."
+        },
+        "orderId": {
+          "type": "string",
+          "description": "Reference to Order. (Relationship: Order 1:N OrderItem)"
+        },
+        "productId": {
+          "type": "string",
+          "description": "Reference to Product. (Relationship: Product 1:N OrderItem)"
+        },
+        "quantity": {
+          "type": "number",
+          "description": "The quantity of the product in the order item."
+        },
+        "unitPrice": {
+          "type": "number",
+          "description": "The price of a single unit of the product at the time of the order."
+        }
+      },
+      "required": [
+        "id",
+        "orderId",
+        "productId",
+        "quantity",
+        "unitPrice"
+      ]
+    },
+    "Customer": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Customer",
+      "type": "object",
+      "description": "Represents a customer of TechNova Electronics Online.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Customer entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The customer's full name."
+        },
+        "email": {
+          "type": "string",
+          "description": "The customer's email address.",
+          "format": "email"
+        },
+        "phone": {
+          "type": "string",
+          "description": "The customer's phone number."
+        },
+        "address": {
+          "type": "string",
+          "description": "The customer's shipping address."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "email",
+        "phone",
+        "address"
+      ]
+    },
+    "PromoCode": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "PromoCode",
+      "type": "object",
+      "description": "Represents a promotional code or discount.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the PromoCode entity."
+        },
+        "code": {
+          "type": "string",
+          "description": "The promotional code itself."
+        },
+        "discountPercentage": {
+          "type": "number",
+          "description": "The discount percentage associated with the promo code (e.g., 0.10 for 10%)."
+        },
+        "expirationDate": {
+          "type": "string",
+          "description": "The date the promo code expires.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "code",
+        "discountPercentage",
+        "expirationDate"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/products/{productId}",
+        "definition": {
+          "entityName": "Product",
+          "schema": {
+            "$ref": "#/backend/entities/Product"
+          },
+          "description": "Stores product information. Includes standard product details such as name, price, description, category, stock, and image URL.",
+          "params": [
+            {
+              "name": "productId",
+              "description": "The unique identifier for the product."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/categories/{categoryId}",
+        "definition": {
+          "entityName": "Category",
+          "schema": {
+            "$ref": "#/backend/entities/Category"
+          },
+          "description": "Stores product categories. Includes category name and description.",
+          "params": [
+            {
+              "name": "categoryId",
+              "description": "The unique identifier for the category."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/orders/{orderId}",
+        "definition": {
+          "entityName": "Order",
+          "schema": {
+            "$ref": "#/backend/entities/Order"
+          },
+          "description": "Stores order information for each user. Includes order date, total amount, status, and payment method. Path-based ownership ensures only the user can access their orders.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "orderId",
+              "description": "The unique identifier for the order."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/orders/{orderId}/orderItems/{orderItemId}",
+        "definition": {
+          "entityName": "OrderItem",
+          "schema": {
+            "$ref": "#/backend/entities/OrderItem"
+          },
+          "description": "Stores individual items within an order. Includes product ID, quantity, and unit price.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            },
+            {
+              "name": "orderId",
+              "description": "The unique identifier for the order."
+            },
+            {
+              "name": "orderItemId",
+              "description": "The unique identifier for the order item."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "Customer",
+          "schema": {
+            "$ref": "#/backend/entities/Customer"
+          },
+          "description": "Stores customer information. Includes name, email, phone, and address. Path-based ownership ensures only the user (or admin) can access their information.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/promoCodes/{promoCodeId}",
+        "definition": {
+          "entityName": "PromoCode",
+          "schema": {
+            "$ref": "#/backend/entities/PromoCode"
+          },
+          "description": "Stores promotional codes and their details, such as discount percentage and expiration date.",
+          "params": [
+            {
+              "name": "promoCodeId",
+              "description": "The unique identifier for the promo code."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "This Firestore structure is designed to support TechNova Electronics Online, focusing on secure data management and efficient querying. It leverages path-based ownership for user-related data and denormalization where necessary to ensure authorization independence and QAPs. The structure includes collections for products, categories, orders, order items, customers, and promo codes. User-specific data such as customer information and orders are stored under the `/users/{userId}` path to enforce clear ownership. The design emphasizes clarity, predictability, and scalability to meet the application's requirements, including admin panel functionalities and email notifications. It will scale well, because the data is appropriately separated and uses strategies like denormalization to ensure the database does not have to complete costly `get()` requests.\n\n**Authorization Independence and QAPs:** Authorization independence is achieved by storing customer-related data directly under the `/users/{userId}` path. This allows security rules to be based solely on the authenticated user's ID without needing to fetch parent document data. QAPs are supported through structural segregation, where collections with different access requirements (e.g., public product listings vs. private user order history) are stored in separate locations."
+  }
+}
