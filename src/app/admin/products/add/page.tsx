@@ -26,6 +26,9 @@ import {
 } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useState } from 'react';
+import Image from 'next/image';
+import type { Product } from "@/lib/types";
 
 const productSchema = z.object({
   name: z.string().min(1, "Product name is required"),
@@ -35,6 +38,7 @@ const productSchema = z.object({
   brand: z.enum(['Nova', 'Electro', 'Sonic', 'Connect']),
   stock: z.coerce.number().int().min(0, "Stock must be a non-negative integer"),
   imageIds: z.string().min(1, "At least one image ID is required"),
+  uploadedImage: z.any().optional(),
   isFeatured: z.boolean().default(false),
   newArrival: z.boolean().default(false),
   rating: z.coerce.number().int().min(1).max(5),
@@ -42,6 +46,9 @@ const productSchema = z.object({
 
 export default function AddProductPage() {
   const router = useRouter();
+  const [preview, setPreview] = useState<string | null>(null);
+  const [newProduct, setNewProduct] = useState<Product | null>(null);
+
   const form = useForm<z.infer<typeof productSchema>>({
     resolver: zodResolver(productSchema),
     defaultValues: {
@@ -58,10 +65,52 @@ export default function AddProductPage() {
 
   function onSubmit(values: z.infer<typeof productSchema>) {
     console.log("New product submitted:", values);
-    // Here you would typically add the product to your database
-    // For now, we'll just log it and redirect
-    router.push("/admin/products");
+    const product: Product = {
+      id: Date.now().toString(),
+      ...values,
+      imageIds: values.imageIds.split(',').map(s => s.trim()),
+      uploadedImage: preview || undefined,
+    };
+    setNewProduct(product);
   }
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
+        form.setValue('uploadedImage', reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  if (newProduct) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="font-headline">Product Added!</CardTitle>
+          <CardDescription>Here is a preview of your new product.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+            <div><strong>Name:</strong> {newProduct.name}</div>
+            <div><strong>Price:</strong> Ksh.{newProduct.price}</div>
+            <div><strong>Description:</strong> {newProduct.description}</div>
+            {newProduct.uploadedImage && (
+                <div>
+                    <strong>Image:</strong>
+                    <div className="mt-2 relative w-48 h-48">
+                        <Image src={newProduct.uploadedImage} alt={newProduct.name} layout="fill" objectFit="cover" className="rounded-md" />
+                    </div>
+                </div>
+            )}
+            <Button onClick={() => router.push('/admin/products')}>Back to Products</Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
 
   return (
     <Card>
@@ -114,6 +163,19 @@ export default function AddProductPage() {
                 </FormItem>
               )}
             />
+            
+            <FormItem>
+              <FormLabel>Product Image</FormLabel>
+              <FormControl>
+                <Input type="file" accept="image/*" onChange={handleImageChange} />
+              </FormControl>
+              {preview && (
+                <div className="mt-4 relative w-48 h-48">
+                    <Image src={preview} alt="Product preview" layout="fill" objectFit="cover" className="rounded-md" />
+                </div>
+              )}
+              <FormMessage />
+            </FormItem>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <FormField
@@ -197,12 +259,12 @@ export default function AddProductPage() {
               name="imageIds"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Image IDs</FormLabel>
+                  <FormLabel>Placeholder Image IDs</FormLabel>
                   <FormControl>
                     <Input placeholder="e.g. product-new-1, product-new-2" {...field} />
                   </FormControl>
                   <FormDescription>
-                    Comma-separated list of image IDs from placeholder-images.json.
+                    Comma-separated list of image IDs from placeholder-images.json. Used if no image is uploaded.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -266,3 +328,5 @@ export default function AddProductPage() {
     </Card>
   );
 }
+
+    

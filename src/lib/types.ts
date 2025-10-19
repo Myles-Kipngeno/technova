@@ -7,6 +7,7 @@ export type Product = {
   brand: 'Nova' | 'Electro' | 'Sonic' | 'Connect';
   stock: number;
   imageIds: string[];
+  uploadedImage?: string;
   isFeatured: boolean;
   newArrival: boolean;
   rating: number;
@@ -32,3 +33,5 @@ export type Order = {
   deliveryStatus: 'Processing' | 'Shipped' | 'Delivered';
   createdAt: Date;
 };
+
+    
