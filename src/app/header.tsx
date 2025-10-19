@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { HardDrive, ShoppingCart, Menu, X, LogOut } from "lucide-react";
+import { HardDrive, ShoppingCart, Menu, X } from "lucide-react";
 import { useCart } from "@/context/cart-context";
 import { Button } from "@/components/ui/button";
 import { usePathname } from "next/navigation";
@@ -12,12 +12,12 @@ import {
   SheetContent,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useUser, useAuth } from "@/firebase";
 
 const navLinks = [
   { href: "/shop", label: "Shop" },
   { href: "/about", label: "About" },
   { href: "/contact", label: "Contact" },
+  { href: "/admin", label: "Admin" },
 ];
 
 export function Header() {
@@ -25,9 +25,6 @@ export function Header() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const { user, isUserLoading } = useUser();
-  const auth = useAuth();
-
 
   useEffect(() => {
     const handleScroll = () => {
@@ -38,12 +35,6 @@ export function Header() {
   }, []);
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
-
-  const handleSignOut = async () => {
-    await auth.signOut();
-    closeMobileMenu();
-  };
-
 
   const NavLinks = ({ isMobile }: { isMobile?: boolean }) => (
     <nav className={cn(
@@ -57,28 +48,13 @@ export function Header() {
           onClick={isMobile ? closeMobileMenu : undefined}
           className={cn(
             "font-medium transition-colors hover:text-primary",
-            pathname === href ? "text-primary" : "text-foreground/80"
+            pathname.startsWith(href) && href !== '/' ? "text-primary" : "text-foreground/80",
+            pathname === href && "text-primary"
           )}
         >
           {label}
         </Link>
       ))}
-      {!isUserLoading && user && pathname.startsWith('/admin') ? (
-         <Button variant={isMobile ? "default" : "ghost"} onClick={handleSignOut}>
-           <LogOut className={cn(!isMobile && "mr-2")}/> {isMobile ? 'Sign Out' : ''}
-         </Button>
-      ) : (
-         <Link
-            href="/admin/login"
-            onClick={isMobile ? closeMobileMenu : undefined}
-            className={cn(
-              "font-medium transition-colors hover:text-primary",
-              pathname === "/admin/login" ? "text-primary" : "text-foreground/80"
-            )}
-          >
-           Admin
-          </Link>
-      )}
     </nav>
   );
 
