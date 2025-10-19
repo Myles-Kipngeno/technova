@@ -1,3 +1,106 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "hero",
+      "description": "Abstract technological background",
+      "imageUrl": "https://images.unsplash.com/photo-1700427296131-0cc4c4610fc6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHx0ZWNobm9sb2d5JTIwYWJzdHJhY3R8ZW58MHx8fHwxNzYwODMzNDg5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "technology abstract"
+    },
+    {
+      "id": "product-smartphone-1",
+      "description": "Modern smartphone",
+      "imageUrl": "https://images.unsplash.com/photo-1716062514556-599c673c582e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxzbWFydHBob25lJTIwZGV2aWNlfGVufDB8fHx8MTc2MDg3OTI3OHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "smartphone device"
+    },
+    {
+      "id": "product-smartphone-2",
+      "description": "Modern smartphone gallery image 2",
+      "imageUrl": "https://images.unsplash.com/photo-1588182464121-05a6397e3a5b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxzbWFydHBob25lJTIwYW5nbGV8ZW58MHx8fHwxNzYwODc5Mjc4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "smartphone angle"
+    },
+    {
+      "id": "product-laptop-1",
+      "description": "Sleek laptop",
+      "imageUrl": "https://images.unsplash.com/photo-1542393545-10f5cde2c810?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxsYXB0b3AlMjBjb21wdXRlcnxlbnwwfHx8fDE3NjA4NjcxMTh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "laptop computer"
+    },
+    {
+      "id": "product-laptop-2",
+      "description": "Sleek laptop gallery image 2",
+      "imageUrl": "https://images.unsplash.com/photo-1593626242406-e279431fb5be?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxsYXB0b3AlMjBrZXlib2FyZHxlbnwwfHx8fDE3NjA4NzkyNzh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "laptop keyboard"
+    },
+    {
+      "id": "product-headphones-1",
+      "description": "Wireless headphones",
+      "imageUrl": "https://images.unsplash.com/photo-1713618651165-a3cf7f85506c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxoZWFkcGhvbmVzJTIwYXVkaW98ZW58MHx8fHwxNzYwODYwMzMxfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "headphones audio"
+    },
+    {
+      "id": "product-headphones-2",
+      "description": "Wireless headphones gallery image 2",
+      "imageUrl": "https://images.unsplash.com/photo-1693841114632-bc1c2760bbfd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxoZWFkcGhvbmVzJTIwcHJvZHVjdHxlbnwwfHx8fDE3NjA4MDA0Nzh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "headphones product"
+    },
+    {
+      "id": "product-smartwatch-1",
+      "description": "Smartwatch",
+      "imageUrl": "https://images.unsplash.com/photo-1664219624278-5c0309a0eeb8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxzbWFydHdhdGNoJTIwdGVjaHxlbnwwfHx8fDE3NjA3NzkwNjN8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "smartwatch tech"
+    },
+    {
+      "id": "product-smartwatch-2",
+      "description": "Smartwatch gallery image 2",
+      "imageUrl": "https://images.unsplash.com/photo-1696688713460-de12ac76ebc6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxzbWFydHdhdGNoJTIwd3Jpc3R8ZW58MHx8fHwxNzYwODA0MTUwfDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "smartwatch wrist"
+    },
+    {
+      "id": "product-camera-1",
+      "description": "Digital camera",
+      "imageUrl": "https://images.unsplash.com/photo-1653851794065-bca8c8c88a04?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxjYW1lcmElMjBwaG90b2dyYXBoeXxlbnwwfHx8fDE3NjA4NzQxNDJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "camera photography"
+    },
+    {
+      "id": "product-camera-2",
+      "description": "Digital camera gallery image 2",
+      "imageUrl": "https://images.unsplash.com/photo-1453728013993-6d66e9c9123a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjYW1lcmElMjBsZW5zfGVufDB8fHx8MTc2MDg2MjgxOHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "camera lens"
+    },
+    {
+      "id": "product-drone-1",
+      "description": "Flying drone",
+      "imageUrl": "https://images.unsplash.com/photo-1562868114-b92695b6bdd4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxkcm9uZSUyMGZseWluZ3xlbnwwfHx8fDE3NjA4NzkyNzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "drone flying"
+    },
+    {
+      "id": "product-drone-2",
+      "description": "Flying drone gallery image 2",
+      "imageUrl": "https://images.unsplash.com/photo-1668836733970-9ed7e53cd2ca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxfHxkcm9uZSUyMGFlcmlhbHxlbnwwfHx8fDE3NjA4MzkzODl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "drone aerial"
+    },
+    {
+      "id": "category-smartphones",
+      "description": "Smartphone category image",
+      "imageUrl": "https://images.unsplash.com/photo-1658755550754-bdf5d58da07b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxzbWFydHBob25lJTIwY29sbGVjdGlvbnxlbnwwfHx8fDE3NjA4NzkyNzh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "smartphone collection"
+    },
+    {
+      "id": "category-laptops",
+      "description": "Laptops category image",
+      "imageUrl": "https://images.unsplash.com/photo-1704652070521-25391cdbbe79?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxsYXB0b3BzJTIwd29ya3xlbnwwfHx8fDE3NjA4NzkyNzh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "laptops work"
+    },
+    {
+      "id": "category-audio",
+      "description": "Audio devices category image",
+      "imageUrl": "https://images.unsplash.com/photo-1737886099638-82bea680e9a9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxhdWRpbyUyMGhlYWRwaG9uZXN8ZW58MHx8fHwxNzYwODcwMzU4fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "audio headphones"
+    },
+    {
+      "id": "category-wearables",
+      "description": "Wearables category image",
+      "imageUrl": "https://images.unsplash.com/photo-1758348844371-dfbae2780bd3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxzbWFydHdhdGNoJTIwZml0bmVzc3xlbnwwfHx8fDE3NjA4NjY5MjV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "smartwatch fitness"
+    }
+  ]
 }
